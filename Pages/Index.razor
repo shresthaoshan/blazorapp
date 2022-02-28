@@ -1,0 +1,63 @@
+@page "/"
+
+@using Part2.Data
+@inject StudentDataService StudentService
+
+<h1>Jenisha Shrestha (B00376179)</h1>
+
+<table class="table">
+    <thead>
+        <th>Student ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Exam Mark</th>
+        <th>Decision</th>
+    </thead>
+    <tbody>
+        @foreach (var item in students)
+        {
+            <tr>
+                <td>@item.StudentId</td>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.ExamMark</td>
+                @if (item.ExamMark >= 40)
+                {
+                    <td>Pass</td>
+
+                }
+                else
+                {
+                    <td>Fail</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>Average Exam Mark: @averageExamMark</p>
+
+
+@code {
+    private Student[] students;
+    private double averageExamMark = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        students = StudentService.GetStudents();
+
+        int count = 0;
+        int cumulative = 0;
+        foreach (Student s in students)
+        {
+            count++;
+            cumulative += s.ExamMark;
+        }
+        if (count > 0)
+        {
+            averageExamMark = cumulative / count;
+        }
+    }
+}
